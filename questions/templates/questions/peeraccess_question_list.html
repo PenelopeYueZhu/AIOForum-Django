@@ -1,0 +1,49 @@
+{% extends "base_generic.html" %}
+
+{% load static %}
+
+{% block style %}
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'questions/search.css' %}">
+  <link rel="stylesheet" type="text/css"
+        href="{% static 'questions/index.css' %}">
+{% endblock %}
+
+{% block script %}
+  <script src="{% static 'js/filter.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+  <input type="text" class="search-bar" placeholder="...">
+
+  {% if question_list %}
+    <ul class="question-list">
+      {% for question in question_list %}
+        <li class="question-list-item">
+          <details>
+            <summary>{{ question.subject }}</summary>
+            {{ question.content }}
+            <hr>
+            {{ question.post_date }}
+            <hr>
+            {% if question.category.all %}
+              Categories:
+              {% for category in question.category.all %}
+                {{ category.name }}
+              {% endfor %}
+            {% endif %}
+
+            {% if question.reply %}
+              <hr>
+              {{ question.reply }}
+            {% endif %}
+            <hr>
+            <a href="{% url 'edit-question' question.pk %}">Edit</a>
+          </details>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    There is no question in the database.
+  {% endif %}
+{% endblock %}

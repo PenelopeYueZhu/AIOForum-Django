@@ -1,0 +1,53 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<form action="" method="post">
+  {% csrf_token %}
+  {{ form.management_form }}
+  <div id="form_set"> <!-- formset -->
+
+    <!-- display errors -->
+    {% if form.errors %}
+      <p> form errors </p>
+      {% for error in form.non_form_errors %}
+        <p> error in non-fiends.</p>
+        <div>
+          <strong>{{ error }}</strong>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    {% for one_form in form %}
+      {{ one_form.non_field_errors }}
+      {{ one_form.errors }}
+      <table class='no_error'>
+        {{ one_form }}
+      </table>
+    {% endfor %}
+  </div>
+  <input type="button" value="Add More" id="add_more">
+  <div id="empty_form" style="display: none">
+    <table class="no_error">
+      {{ form.empty_form }}
+    </table>
+  </div>
+
+  <input type="submit" name="add-categories" value="Save"
+         onclick="return confirm('Sure to save?');"/>
+</form>
+
+  <script>
+    $('#add_more').click(function(){
+      var form_idx = $('input#id_form-TOTAL_FORMS').val();
+
+      $('#form_set').append(
+        $('#empty_form').html().replace(/__prefix__/g, form_idx)
+      );
+
+      $('input#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+    });
+  </script>
+
+
+{% endblock %}

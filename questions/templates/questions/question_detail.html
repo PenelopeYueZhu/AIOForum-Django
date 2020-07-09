@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+  {{ question.subject }}
+  <hr>
+  {{ question.content }}
+  <hr>
+  {{ question.post_date }}
+
+  {% if question.reply %}
+    <hr>
+    {{ question.reply.content }}
+  {% endif %}
+
+{% endblock %}

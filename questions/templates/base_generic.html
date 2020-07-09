@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    {% block title %}<title></title>{% endblock %}
+    <meta charset="utf-8">
+
+    {% load static %}
+
+    {% block style %}
+    {% endblock %}
+
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+            integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+            crossorigin="anonymous">
+    </script>
+
+  </head>
+
+  <body>
+    {% block script %}
+    {% endblock %}
+
+    <nav> <!-- side nav bar -->
+      <ul>
+        <li id="test"><a href="{% url 'index' %}">Home</a></li>
+        <li><a href="{% url 'submit-question' %}">Ask us a question</a></li>
+        <li><a href="{% url 'index' %}">All Questions</a></li>
+        <li><a href="">Contact Us</a></li>
+        <li><a href="">Report Cheating</a></li>
+        <li><a href="">UCSD's Policy on Academic Integrity</a></li>
+      </ul>
+    </nav>
+
+    <header> <!-- Filters and search bars -->
+
+    </header>
+
+    <main> <!-- main display of all informations -->
+
+      {% block content %}{% endblock %}
+
+      {% block pagination %}
+        {% if is_paginated %}
+          <div class="pagination">
+            <span class="page-links">
+              {% if page_obj.has_previous %}
+                <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+              {% endif %}
+
+              <span class="page-current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+              </span>
+
+              {% if page_obj.has_next %}
+                <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+              {% endif %}
+
+            </span>
+          </div>
+        {% endif %}
+      {% endblock %}
+    </main>
+
+    <footer> <!-- developer info-->
+
+    </footer>
+
+  </body>
+</html>
