@@ -146,35 +146,28 @@ class QuestionTestList(ListAPIView):
     serializer_class = QuestionSerializers
     pagination_class = StandardResultsSetPagination
 
-    # For filtering by which time frame the qusetoin is posted in.
-    DAY = 'Past Day'
-    WEEK = 'Pask Week'
-    MONTH = 'Past Month'
-    YEAR = 'Past Year'
-    DAYS_A_WEEK = 7
-    DAYS_A_MONTH = 30
-    DAYS_A_YEAR = 365
-
-    # For sorting by oldest or newest.
-    OLD_TO_NEW = 'Oldest First'
-    NEW_TO_OLD = 'Newest First'
-
-    POST_DATE_CHOICES = {
-        DAY: 1,
-        WEEK: DAYS_A_WEEK,
-        MONTH: DAYS_A_MONTH,
-        YEAR: DAYS_A_YEAR,
-    }
-
-
-    # Pagination class and serializer class.
-    #pagination_class = StandardResultsSetPagination
-
     def get_queryset(self):
+
+        # For filtering by which time frame the qusetoin is posted in.
+        DAY = 'Past Day'
+        WEEK = 'Pask Week'
+        MONTH = 'Past Month'
+        YEAR = 'Past Year'
+        DAYS_A_WEEK = 7
+        DAYS_A_MONTH = 30
+        DAYS_A_YEAR = 365
+
+        POST_DATE_CHOICES = {
+            DAY: 1,
+            WEEK: DAYS_A_WEEK,
+            MONTH: DAYS_A_MONTH,
+            YEAR: DAYS_A_YEAR,
+        }
+
         # Query based on filters applied.
         query_list = Question.objects.all()
         categories = self.request.query_params.get('categories', None)
-        #post_date = self.request.query_params.get('post_date', None)
+        post_date = self.request.query_params.get('post_in', None)
         sort_by = self.request.query_params.get('sort_by', None)
 
         # If category filters applied:
@@ -182,12 +175,14 @@ class QuestionTestList(ListAPIView):
             # Get all the questions whose category matches at least one of the
             # applied categories.
             query_list = query_list.filter(category__id=categories).distinct()
+
         # If post_date filter applied:
-       # if post_date:
-        #    query_list = query_list.filter(
-         #       post_date__gt=datetime.datetime.today() -
-          #      datetime.timedelta(days=POST_DATE_CHOICES).get(
-           #     post_date, DAYS_A_YEAR))
+        if post_date:
+            query_list = query_list.filter(
+                post_date__gt=datetime.datetime.today() -
+                    datetime.timedelta(days=(POST_DATE_CHOICES.get(
+                    post_date, DAYS_A_YEAR)))
+            )
 
         # After query, if sort_by filter applied:
         if sort_by:
