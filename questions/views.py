@@ -125,3 +125,89 @@ def submit_question(request):
 def submit_question_success(request):
     # Render the success page.
     return render(request, 'questions/submit_question_success.html')
+
+
+def question_test_list(request):
+    return render(request, 'questions/test2.html')
+
+"""Testing using rest and ajax to dynamically filter."""
+
+from django.http import JsonResponse
+from django.shortcuts import render
+from rest_framework.generics import ListAPIView
+from .serializers import QuestionSerializers
+from .models import Question, Category
+from .pagination import StandardResultsSetPagination
+
+
+class QuestionTestList(ListAPIView):
+    serializer_class = QuestionSerializers
+
+    # For filtering by which time frame the qusetoin is posted in.
+    DAY = 'Past Day'
+    WEEK = 'Pask Week'
+    MONTH = 'Past Month'
+    YEAR = 'Past Year'
+    DAYS_A_WEEK = 7
+    DAYS_A_MONTH = 30
+    DAYS_A_YEAR = 365
+
+    # For sorting by oldest or newest.
+    OLD_TO_NEW = 'Oldest First'
+    NEW_TO_OLD = 'Newest First'
+
+    POST_DATE_CHOICES = {
+        DAY: 1,
+        WEEK: DAYS_A_WEEK,
+        MONTH: DAYS_A_MONTH,
+        YEAR: DAYS_A_YEAR,
+    }
+
+
+    # Pagination class and serializer class.
+    #pagination_class = StandardResultsSetPagination
+
+    def get_queryset(self):
+        # Query based on filters applied.
+        query_list = Question.objects.all()
+        categories = self.request.query_params.get('categories', None)
+        #post_date = self.request.query_params.get('post_date', None)
+        sort_by = self.request.query_params.get('sort_by', None)
+
+        # If category filters applied:
+        if categories:
+            # Get all the questions whose category matches at least one of the
+            # applied categories.
+            query_list = query_list.filter(category__id=categories).distinct()
+        # If post_date filter applied:
+       # if post_date:
+        #    query_list = query_list.filter(
+         #       post_date__gt=datetime.datetime.today() -
+          #      datetime.timedelta(days=POST_DATE_CHOICES).get(
+           #     post_date, DAYS_A_YEAR))
+
+        # After query, if sort_by filter applied:
+        if sort_by:
+            if sort_by == 'Oldest First':
+                # Order by date, ascending as dates get newer/bigger.
+                query_list = query_list.order_by('post_date')
+            else:
+                query_list = query_list.order_by('-post_date')
+
+        return query_list
+
+
+def getCategories(request):
+    # Return all the categories.
+    if request.method == 'GET' and request.is_ajax():
+        # Get all the question objects.
+        category_objs = Category.objects.all()
+        # List the name out to be a string array.
+        category_names = []
+        for cat in category_objs:
+            category_names.append(cat.id)
+
+        data = {
+            'categories': category_names,
+        }
+        return JsonResponse(data, status=200)
