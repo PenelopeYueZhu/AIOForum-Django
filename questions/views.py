@@ -5,6 +5,8 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import UpdateView, DeletionMixin, CreateView
 from django.views.generic.edit import FormView
 
+from django.conf import settings
+
 from questions.models import Category, Question
 from questions.forms import SubmitQuestionForm, CategoryFormSet
 
@@ -13,7 +15,7 @@ import datetime
 # Create your views here.
 
 class PublicQuestionListView(generic.ListView):
-    paginate_by = 10
+    paginate_by = settings.PAGINATE_BY
     model = Question
     # Only show questions that has been published.
     queryset = Question.objects.filter(status__iexact=Question.PUBLIC)
@@ -24,7 +26,7 @@ class QuestionDetailView(generic.DetailView):
 # Show all the questions. Only Peers should have access to this.
 class AllQuestionListView(generic.ListView):
     # Get all the questions from the database.
-    paginate_by = 10
+    paginate_by = settings.PAGINATE_BY
     model = Question
 
     # Use a different template since we want a different filter option on top.
@@ -32,7 +34,7 @@ class AllQuestionListView(generic.ListView):
 
 # Show the questions based on filtered results.
 class QuestionByStatusListView(generic.ListView):
-    paginate_by = 10
+    paginate_by = settings.PAGINATE_BY
 
     # Use a different template since we want a different filter option on top.
     template_name = 'questions/peeraccess_question_list.html'
@@ -142,6 +144,7 @@ from .pagination import StandardResultsSetPagination
 
 class QuestionTestList(ListAPIView):
     serializer_class = QuestionSerializers
+    pagination_class = StandardResultsSetPagination
 
     # For filtering by which time frame the qusetoin is posted in.
     DAY = 'Past Day'

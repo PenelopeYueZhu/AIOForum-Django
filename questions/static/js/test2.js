@@ -68,12 +68,11 @@ function putTableData(result) {
     // pushing to the html cntent of table body of listing table
 
     let row;
-console.log(result);
-    if(result.length > 0){
+    if(result.results.length > 0){
         $("#no_results").hide();
         $("#list_data").show();
         $("#listing").html("");
-        $.each(result, function (a, b) {
+        $.each(result.results, function (a, b) {
             row = "<tr> <td title=\"" + b.subject + "\">" + b.subject.slice(0, 50) + "..." + "</td>" +
                 "<td title=\"" + b.content + "\">" + b.content.slice(0, 60) + "..." + "</td>" +
                 "<td>" + b.category + "</td></tr>"
@@ -87,6 +86,7 @@ console.log(result);
         $("#list_data").hide();
         $("#no_results").show();
     }
+
     // setting previous and next page url for the given result
 
     let prev_url = result["previous"];
@@ -154,7 +154,7 @@ $("#next").click(function () {
             putTableData(result);
         },
         error: function(response){
-            console.log(response)
+            console.log(response);
         }
     });
 })

@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
 from django.urls import reverse
+from django.conf import settings
 
 import uuid
 import itertools
@@ -24,30 +25,24 @@ class Question(models.Model):
         (PUBLIC, 'Public'),
     )
 
-    # max_length.
-    SLUG_MAX_LENGTH = 200
-    SUBJECT_MAX_LENGTH = 140
-    CONTENT_MAX_LENGTH = 1000
-    STATUS_MAX_LENGTH = 1
-
     # A unique slug for each question: as URL identifier
     slug = models.SlugField(unique = True,
         default='',
-        max_length=SLUG_MAX_LENGTH)
+        max_length=settings.QUESTION_SLUG_MAX_LEN)
 
     # Subject of the question
-    subject = models.CharField(max_length = SUBJECT_MAX_LENGTH,
+    subject = models.CharField(max_length=settings.QUESTION_SUBJECT_MAX_LEN,
         help_text='Summarize your question.')
 
     # Content of the question
-    content = models.TextField(max_length = CONTENT_MAX_LENGTH,
+    content = models.TextField(max_length=settings.LONG_TEXT_MAX_LEN,
         help_text='State your question here')
 
     # The date and time of the post. Edited automatically
     post_date = models.DateTimeField(auto_now_add = True)
 
     # Reply edited later by peer.
-    reply =  models.TextField(max_length=CONTENT_MAX_LENGTH,
+    reply =  models.TextField(max_length=settings.LONG_TEXT_MAX_LEN,
         help_text='State your reply here',
         null=True, blank=True,)
 
@@ -61,7 +56,7 @@ class Question(models.Model):
     op_email = models.EmailField(blank = True)
 
     status = models.CharField(
-        max_length = STATUS_MAX_LENGTH,
+        max_length =1, # Can only have 1 status at a time.
         choices = STATUS,
         blank = True,
         default = 'n',
@@ -109,11 +104,8 @@ class Question(models.Model):
 
 # Category model to hold information about a category
 class Category(models.Model):
-    """Constants."""
-    # max_length.
-    NAME_MAX_LENGTH = 100
     """Model representing the category of a question"""
-    name = models.CharField(max_length = NAME_MAX_LENGTH,
+    name = models.CharField(max_length = settings.CATEGORY_NAME_MAX_LEN,
         help_text = 'Enter the name of the category')
 
     def __str__(self):
@@ -122,13 +114,10 @@ class Category(models.Model):
 
 # Reply model to hold information about a reply
 class Reply(models.Model):
-    """Constants"""
-    # max_length.
-    CONTENT_MAX_LENGTH = 1000
     """Model representing a reply to a question"""
 
     # Content of the reply
-    content = models.TextField(max_length = CONTENT_MAX_LENGTH,
+    content = models.TextField(max_length = settings.LONG_TEXT_MAX_LEN,
         help_text = 'State your reply here')
 
     # The date and time of the reply. Edited automatically

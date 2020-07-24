@@ -123,3 +123,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Custom defined constants.
+LONG_TEXT_MAX_LEN = 1000
+QUESTION_SLUG_MAX_LEN = 200
+QUESTION_SUBJECT_MAX_LEN = 140
+CATEGORY_NAME_MAX_LEN = 100
+PAGINATE_BY = 10
