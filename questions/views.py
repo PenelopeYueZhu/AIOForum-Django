@@ -166,15 +166,16 @@ class QuestionTestList(ListAPIView):
 
         # Query based on filters applied.
         query_list = Question.objects.all()
-        categories = self.request.query_params.get('categories', None)
+        category = self.request.query_params.get('categories', None)
         post_date = self.request.query_params.get('post_in', None)
+        status = self.request.query_params.get('status', None)
         sort_by = self.request.query_params.get('sort_by', None)
 
         # If category filters applied:
-        if categories:
+        if category:
             # Get all the questions whose category matches at least one of the
             # applied categories.
-            query_list = query_list.filter(category__id=categories).distinct()
+            query_list = query_list.filter(category__id=category).distinct()
 
         # If post_date filter applied:
         if post_date:
@@ -183,6 +184,10 @@ class QuestionTestList(ListAPIView):
                     datetime.timedelta(days=(POST_DATE_CHOICES.get(
                     post_date, DAYS_A_YEAR)))
             )
+
+        # If status filter applied:
+        if status:
+            query_list = query_list.filter(status__iexact=status)
 
         # After query, if sort_by filter applied:
         if sort_by:

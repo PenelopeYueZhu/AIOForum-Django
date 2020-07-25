@@ -15,6 +15,7 @@
     <div class="container-fluid">
       <div class="row">
 
+        <!-- Category options. -->
         <div class="col-sm-2 col-2">
           <div class="form-group">
             <label for="category">Category</label>
@@ -24,6 +25,7 @@
           </div>
         </div>
 
+        <!-- Sorting options. -->
         <div class="col-sm-2 col-2">
           <div class="form-group">
             <label for="sort">Sort By</label>
@@ -36,16 +38,31 @@
           </div>
         </div>
 
+        <!-- Post date options. -->
         <div class="col-sm-2 col-2">
           <div class="form-group">
             <label for="post-date">Post In</label>
             <select class="form-control" id="post_in">
               <option selected="true"
-                      disabled="disabled" value = "none">Choose option</option>
+                      value = "none">All</option>
               <option value='Past Day'>Past Day</option>
               <option value='Past Week'>Past Week</option>
               <option value='Past Month'>Past Month</option>
               <option value='Past Year'>Past Year</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Status options. -->
+        <div class="col-sm-2 col-2">
+          <div class="form-group">
+            <label for="post-date">Status</label>
+            <select class="form-control" id="status">
+              <option selected="true"
+                      value = "none">All</option>
+              <option value='a'>Answered</option>
+              <option value='p'>Public</option>
+              <option value='n'>New</option>
             </select>
           </div>
         </div>
@@ -99,6 +116,6 @@
 {% endblock %}
 
 {% block script %}
-  <script src="{% static 'js/test2.js' %}" type="text/javascript">
+  <script src="{% static 'js/filters.js' %}" type="text/javascript">
   </script>
 {% endblock %}

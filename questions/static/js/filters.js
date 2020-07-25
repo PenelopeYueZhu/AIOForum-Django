@@ -1,20 +1,14 @@
 
-
-// variable that keeps all the filter information
-
+// Variable that keeps all the filter information to send to backend.
 var send_data = {};
 
 $(document).ready(function () {
   // reset all parameters on page load
   resetFilters();
-
   // bring all the data without any filters.
   getAPIData();
-
   // get all categories from database via ajax call.
   getCategories();
-
-  // sort the data according to price/points
 
   // on selecting the category option
   $('#categories').on('change', function () {
@@ -29,14 +23,27 @@ $(document).ready(function () {
       getAPIData();
   });
 
-
+  // On selecting sorting options.
   $('#sort_by').on('change', function () {
-    send_data['sort_by'] = this.value;
+    send_data['categories'] = this.value;
     getAPIData();
   });
 
+  // On selecting posted date options.
   $('#post_in').on('change', function(){
-    send_data['post_in'] = this.value;
+    if(this.value == 'none')
+      send_data['post_in'] = '';
+    else
+      send_data['post_in'] = this.value;
+    getAPIData();
+  });
+
+  // On selecting question status.
+  $('#status').on('change', function(){
+    if(this.value == 'none')
+      send_data['status'] = '';
+    else
+      send_data['status'] = this.value;
     getAPIData();
   });
 
@@ -50,21 +57,23 @@ $(document).ready(function () {
 
 
 /**
-    Function that resets all the filters
+  Resets all the filters
 **/
 function resetFilters() {
   $("#categories").val("all");
   $("#sort_by").val("none");
-  $("#post_in").val("none");
+  $('#post_in').val("none");
+  $('#status').val('none');
 
   send_data['categories'] = '';
   send_data['sort_by'] = '';
   send_data['post_in'] = '';
+  send_data['status'] = '';
 }
 
-/**.
-    Utility function to showcase the api data
-    we got from backend to the table content
+/**
+  Utility function to showcase the api data
+  we got from backend to the table content
 **/
 function putTableData(result) {
   // creating table row for each result and
@@ -98,11 +107,10 @@ function putTableData(result) {
   }
 
   // setting previous and next page url for the given result
-
   let prev_url = result["previous"];
   let next_url = result["next"];
-  // disabling-enabling button depending on existence of next/prev page.
 
+  // disabling-enabling button depending on existence of next/prev page.
   if (prev_url === null) {
     $("#previous").addClass("disabled");
     $("#previous").prop('disabled', true);
@@ -117,12 +125,12 @@ function putTableData(result) {
     $("#next").removeClass("disabled");
     $("#next").prop('disabled', false);
   }
-  // setting the url
 
+  // setting the url
   $("#previous").attr("url", result["previous"]);
   $("#next").attr("url", result["next"]);
-  // displaying result count
 
+  // displaying result count
   $("#result-count span").html(result["count"]);
 }
 
@@ -146,12 +154,10 @@ function getAPIData() {
 }
 
 $("#next").click(function () {
+
     // load the next page data and
-
     // put the result to the table body
-
     // by making ajax call to next available url
-
     let url = $(this).attr("url");
     if (!url)
         $(this).prop('all', true);
@@ -170,12 +176,10 @@ $("#next").click(function () {
 })
 
 $("#previous").click(function () {
+
     // load the previous page data and
-
     // put the result to the table body
-
     // by making ajax call to previous available url
-
     let url = $(this).attr("url");
     if (!url)
         $(this).prop('all', true);
@@ -196,18 +200,16 @@ $("#previous").click(function () {
 function getCategories() {
   // fill the options of countries by making ajax call
   // obtain the url from the countries select input attribute
-
   let url = $("#categories").attr("url");
 
   // makes request to getCountries(request) method in views
-
   $.ajax({
     method: 'GET',
     url: url,
     data: {},
     success: function (result) {
 
-      categories_option="<option value='all' selected>All Categories</option>";
+      categories_option="<option value='all' selected>All</option>";
       $.each(result["categories"], function (a, b) {
           categories_option += "<option>" + b + "</option>"
       });
