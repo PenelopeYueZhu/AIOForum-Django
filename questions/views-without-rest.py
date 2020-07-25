@@ -12,8 +12,25 @@ from questions.forms import SubmitQuestionForm, CategoryFormSet
 
 import datetime
 
+# Create your views here.
+
+class PublicQuestionListView(generic.ListView):
+    paginate_by = settings.PAGINATE_BY
+    model = Question
+    # Only show questions that has been published.
+    queryset = Question.objects.filter(status__iexact=Question.PUBLIC)
+
 class QuestionDetailView(generic.DetailView):
     model = Question
+
+# Show all the questions. Only Peers should have access to this.
+"""class AllQuestionListView(generic.ListView):
+    # Get all the questions from the database.
+    paginate_by = settings.PAGINATE_BY
+    model = Question
+
+    # Use a different template since we want a different filter option on top.
+    template_name = 'questions/peeraccess_question_list.html'"""
 
 # Peer access to update a question.
 # Reference: https://stackoverflow.com/questions/51772361/

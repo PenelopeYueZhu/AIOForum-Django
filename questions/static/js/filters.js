@@ -25,7 +25,7 @@ $(document).ready(function () {
 
   // On selecting sorting options.
   $('#sort_by').on('change', function () {
-    send_data['categories'] = this.value;
+    send_data['sort_by'] = this.value;
     getAPIData();
   });
 
@@ -38,14 +38,17 @@ $(document).ready(function () {
     getAPIData();
   });
 
-  // On selecting question status.
-  $('#status').on('change', function(){
-    if(this.value == 'none')
-      send_data['status'] = '';
-    else
-      send_data['status'] = this.value;
-    getAPIData();
-  });
+  // If status choice exists:
+  if( $('#status').length ){
+    // On selecting question status.
+    $('#status').on('change', function(){
+      if(this.value == 'none')
+        send_data['status'] = '';
+      else
+        send_data['status'] = this.value;
+      getAPIData();
+    });
+  }
 
   // display the results after reseting the filters
 
@@ -63,12 +66,15 @@ function resetFilters() {
   $("#categories").val("all");
   $("#sort_by").val("none");
   $('#post_in').val("none");
-  $('#status').val('none');
+
+  if( $('#status').length ){
+    $('#status').val('none');
+    send_data['status'] = '';
+  }
 
   send_data['categories'] = '';
   send_data['sort_by'] = '';
   send_data['post_in'] = '';
-  send_data['status'] = '';
 }
 
 /**
@@ -85,11 +91,23 @@ function putTableData(result) {
     $("#no_results").hide();
     $("#list_data").show();
     $("#listing").html("");
+
+    // List all the questions.
     $.each(result.results, function (a, b) {
+
+      let url;
+      // If user has access to status choice, then they are authorized to edit.
+      if( $('#status').length ){
+        url = "<a href=\""+ b.slug + "/edit\">Edit</a>";
+console.log(url);
+      } else { // Else they only view.
+        url = "<a href=\"" + b.slug + "\">Read More</a>";
+      }
+
       row = "<tr>" +
                "<td title=\"" + b.subject + "\">" + b.subject.slice(0, 50) +
                "..." +
-               "<a href=\"peaccess/"+ b.slug + "/edit\">Edit</a>"+
+               url +
                "</td>" +
                "<td title=\"" + b.content + "\">" + b.content.slice(0, 60) +
                "..." +
