@@ -89,6 +89,7 @@ function putTableData(result) {
       row = "<tr>" +
                "<td title=\"" + b.subject + "\">" + b.subject.slice(0, 50) +
                "..." +
+               "<a href=\"peaccess/"+ b.slug + "/edit\">Edit</a>"+
                "</td>" +
                "<td title=\"" + b.content + "\">" + b.content.slice(0, 60) +
                "..." +
@@ -100,7 +101,6 @@ function putTableData(result) {
   }
   else{
     // if no result found for the given filter, then display no result
-
     $("#no_results h5").html("No results found");
     $("#list_data").hide();
     $("#no_results").show();
@@ -176,7 +176,6 @@ $("#next").click(function () {
 })
 
 $("#previous").click(function () {
-
     // load the previous page data and
     // put the result to the table body
     // by making ajax call to previous available url

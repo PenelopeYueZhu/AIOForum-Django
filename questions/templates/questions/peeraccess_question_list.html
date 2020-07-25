@@ -38,7 +38,7 @@
               {{ question.reply }}
             {% endif %}
             <hr>
-            <a href="{% url 'edit-question' question.pk %}">Edit</a>
+            <a href="{% url 'edit-question' question.slug %}">Edit</a>
           </details>
         </li>
       {% endfor %}

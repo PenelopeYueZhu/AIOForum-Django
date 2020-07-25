@@ -129,8 +129,8 @@ def submit_question_success(request):
     return render(request, 'questions/submit_question_success.html')
 
 
-def question_test_list(request):
-    return render(request, 'questions/test2.html')
+def all_question_list(request):
+    return render(request, 'questions/peaccess_questions.html')
 
 """Testing using rest and ajax to dynamically filter."""
 
@@ -142,7 +142,7 @@ from .models import Question, Category
 from .pagination import StandardResultsSetPagination
 
 
-class QuestionTestList(ListAPIView):
+class AllQuestionList(ListAPIView):
     serializer_class = QuestionSerializers
     pagination_class = StandardResultsSetPagination
 

@@ -3,9 +3,11 @@
   <head>
     {% block title %}<title></title>{% endblock %}
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     {% load static %}
 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     {% block style %}
     {% endblock %}
 
@@ -15,11 +17,13 @@
             crossorigin="anonymous">
     </script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
   </head>
 
   <body>
-    {% block script %}
-    {% endblock %}
 
     <nav> <!-- side nav bar -->
       <ul>
@@ -40,31 +44,13 @@
 
       {% block content %}{% endblock %}
 
-      {% block pagination %}
-        {% if is_paginated %}
-          <div class="pagination">
-            <span class="page-links">
-              {% if page_obj.has_previous %}
-                <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
-              {% endif %}
-
-              <span class="page-current">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-              </span>
-
-              {% if page_obj.has_next %}
-                <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
-              {% endif %}
-
-            </span>
-          </div>
-        {% endif %}
-      {% endblock %}
     </main>
 
     <footer> <!-- developer info-->
 
     </footer>
 
+    {% block script %}
+    {% endblock %}
   </body>
 </html>
